@@ -3,11 +3,14 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const multer = require("multer");
 const path = require("path");
+const AppError = require("./utils/appError");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
-
+// TODO: confirm this
 app.use("/images", express.static(path.join(__dirname, "public/images")));
-
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 //middleware
 app.use(express.json());
 app.use(helmet());
@@ -35,10 +38,12 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   }
 });
 
-app.use("/api/auth", authRoute);
-app.use("/api/users", userRoute);
-app.use("/api/posts", postRoute);
+app.use("/api/v1", v1Route);
 
-app.listen(8800, () => {
-  console.log("Backend server is running!");
+app.all("*", (_req, _res, next) => {
+  next(new AppError("Route not Found!", 404));
 });
+
+app.use(errorHandler);
+
+module.exports = app;
