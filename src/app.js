@@ -5,6 +5,8 @@ const multer = require("multer");
 const path = require("path");
 const AppError = require("./utils/appError");
 const errorHandler = require("./middleware/errorHandler");
+const v1Router = require("./router");
+const { stream } = require("./config/winston");
 
 const app = express();
 // TODO: confirm this
@@ -38,7 +40,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   }
 });
 
-app.use("/api/v1", v1Route);
+app.use("/api/v1", v1Router);
 
 app.all("*", (_req, _res, next) => {
   next(new AppError("Route not Found!", 404));

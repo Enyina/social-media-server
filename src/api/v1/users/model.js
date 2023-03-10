@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     username: {
       type: String,
@@ -8,6 +10,18 @@ const userSchema = new mongoose.Schema(
       min: 3,
       max: 20,
       unique: true,
+    },
+    firstName: {
+      type: String,
+      require: true,
+      min: 3,
+      max: 20,
+    },
+    lastName: {
+      type: String,
+      require: true,
+      min: 3,
+      max: 20,
     },
     email: {
       type: String,
@@ -28,14 +42,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    followers: {
-      type: Array,
-      default: [],
-    },
-    followings: {
-      type: Array,
-      default: [],
-    },
+    friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
     isAdmin: {
       type: Boolean,
       default: false,
@@ -60,7 +67,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = model("User", userSchema);
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

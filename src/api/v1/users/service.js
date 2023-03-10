@@ -1,9 +1,21 @@
 const User = require("./model");
 const AppError = require("../../../utils/appError");
 const catchAsync = require("../../../utils/catchAsync");
+const FriendRequest = require("../friends/models/friendRequest");
 
 const userService = {
-  getOne: catchAsync(async (req) => {
+  create: async (req) => {
+    const { username, firstName, lastName, email, password } = req.body;
+    const user = await User.create({
+      username,
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+    return user;
+  },
+  getOne: async (req) => {
     const userId = req.body.userId;
     const username = req.body.username;
 
@@ -11,8 +23,8 @@ const userService = {
       ? await User.findById(userId)
       : await User.findOne({ username });
     return user;
-  }),
-  update: catchAsync(async (req) => {
+  },
+  update: async (req) => {
     if (req.body.userId !== req.params.id || !req.body.isAdmin) {
       throw new AppError("You can't update another user's account", 403);
     }
@@ -28,8 +40,8 @@ const userService = {
       runValidators: true,
     });
     return updatedUser;
-  }),
-  delete: catchAsync(async (id) => {
+  },
+  delete: async (req) => {
     if (req.body.userId !== req.params.id || !req.body.isAdmin) {
       throw new AppError("You can't update another user's account", 403);
     }
@@ -37,5 +49,12 @@ const userService = {
     await User.findByIdAndDelete(id);
 
     return null;
-  }),
+  },
+  getFriends: async (id) => {
+    const user = await User.findById(id).populate("friends");
+    const friends = user.friends;
+    return friends;
+  },
 };
+
+module.exports = userService;

@@ -8,6 +8,5 @@ const v1Router = Router();
 v1Router.use("/auth", authRoute);
 v1Router.use("/users", userRoute);
 v1Router.use("/posts", postRoute);
-// v1Router.use("/",)
 
 module.exports = v1Router;
