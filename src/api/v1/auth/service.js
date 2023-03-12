@@ -36,5 +36,22 @@ const authService = {
 
     return { accessToken, refreshToken };
   },
+  refreshToken: async ({ userId, refreshToken }) => {
+    const identification = await Identity.findOne({
+      _id: userId,
+      refreshToken,
+    });
+    if (!identification) {
+      throw new AppError("Refresh token is not valid.", 401);
+    }
+    const { accessToken, refreshToken: refToken } = JWTHelper.generateTokens(
+      identification.userId
+    );
+    await Identity.findOneAndUpdate(identification._id, {
+      authToken: accessToken,
+      refreshToken: refToken,
+    });
+    return { accessToken, refreshToken: refToken };
+  },
 };
 module.exports = authService;

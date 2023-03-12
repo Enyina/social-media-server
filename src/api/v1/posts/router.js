@@ -9,7 +9,6 @@ postRouter.route("/:postId/replies").post(postController.newReply);
 postRouter.route("/:postId/likes").post(postController.like);
 
 postRouter.route("/timeline/:userId").get(postController.Timelime);
-postRouter.route("/profile/:userId").get(postController.Timelime);
 
 postRouter
   .route("/:postId")
