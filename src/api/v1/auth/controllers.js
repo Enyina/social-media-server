@@ -5,14 +5,15 @@ const { log } = require("winston");
 
 const authController = {
   signup: catchAsync(async (req, res) => {
-    console.log(req);
+    console.log(req.body);
     const { accessToken, refreshToken } = await authService.register(req);
+    console.log({ accessToken }, { refreshToken });
 
-    res.cookies("accessToken", access, {
+    res.cookie("accessToken", accessToken, {
       maxage: 600000, // 10 minutes
       httpOnly: true,
     });
-    res.cookies("accessToken", access, {
+    res.cookie("refreshToken", refreshToken, {
       maxage: 1000 * 60 * 60 * 24 * 60,
       httpOnly: true,
     });
@@ -23,11 +24,11 @@ const authController = {
   login: catchAsync(async (req, res) => {
     const { accessToken, refreshToken } = await authService.login(req);
 
-    res.cookies("accessToken", access, {
+    res.cookie("accessToken", accessToken, {
       maxage: 600000, // 10 minutes
       httpOnly: true,
     });
-    res.cookies("accessToken", access, {
+    res.cookie("refreshToken", refreshToken, {
       maxage: 1000 * 60 * 60 * 24 * 60,
       httpOnly: true,
     });

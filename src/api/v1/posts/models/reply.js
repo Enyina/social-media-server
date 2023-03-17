@@ -15,5 +15,6 @@ const replySchema = new Schema({
   },
   replies: { type: Schema.Types.ObjectId, required: true, ref: "Reply" },
 });
+const Reply = model("Reply", replySchema);
 
-module.exports = model("Reply", replySchema);
+module.exports = Reply;

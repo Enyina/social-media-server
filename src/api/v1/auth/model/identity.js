@@ -11,4 +11,6 @@ const identitySchema = new Schema({
     required: true,
   },
 });
-module.exports = model("Identity", identitySchema);
+const Identity = model("Identity", identitySchema);
+
+module.exports = Identity;

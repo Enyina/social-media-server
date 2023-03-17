@@ -8,4 +8,6 @@ const FriendRequestSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = model("FriendRequest", FriendRequestSchema);
+const friendRequest = model("FriendRequest", FriendRequestSchema);
+
+module.exports = friendRequest;

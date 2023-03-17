@@ -4,9 +4,14 @@ const JWTHelpers = {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: lifeSpan });
   },
   generateToken: (id) => {
-    const accessToken = JWTHelpers.makeTokens(id, "600s"); // expires in 10 minutes
-    const refreshToken = JWTHelpers.makeTokens(id, "5400s"); // expires in 3 months
-    return { accessToken, refreshToken };
+    try {
+      const accessToken = JWTHelpers.makeTokens(id, "1h"); // expires in 1 hour
+      const refreshToken = JWTHelpers.makeTokens(id, "90d"); // expires in 3 months
+
+      return { accessToken, refreshToken };
+    } catch (error) {
+      console.log(error);
+    }
   },
   verifyToken: (token) => {
     try {

@@ -1,19 +1,24 @@
 const User = require("./model");
 const AppError = require("../../../utils/appError");
-const catchAsync = require("../../../utils/catchAsync");
+
 const FriendRequest = require("../friends/models/friendRequest");
 
 const userService = {
   create: async (req) => {
     const { username, firstName, lastName, email, password } = req.body;
-    const user = await User.create({
-      username,
-      firstName,
-      lastName,
-      email,
-      password,
-    });
-    return user;
+    try {
+      const user = await User.create({
+        username,
+        // firstName,
+        // lastName,
+        email,
+        password,
+      });
+
+      return user;
+    } catch (error) {
+      log.error(error);
+    }
   },
   getOne: async (req) => {
     const userId = req.body.userId;

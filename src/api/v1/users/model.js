@@ -9,17 +9,17 @@ const userSchema = new Schema(
       require: true,
       min: 3,
       max: 20,
-      unique: true,
+      unique: [true, "username already in use"],
     },
     firstName: {
       type: String,
-      require: true,
+      // require: true,
       min: 3,
       max: 20,
     },
     lastName: {
       type: String,
-      require: true,
+      // require: true,
       min: 3,
       max: 20,
     },
@@ -27,7 +27,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       max: 50,
-      unique: true,
+      unique: [true, "email address already in use"],
     },
     password: {
       type: String,
@@ -66,8 +66,9 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+const User = model("User", userSchema);
 
-module.exports = model("User", userSchema);
+module.exports = User;
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

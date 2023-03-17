@@ -2,12 +2,13 @@ const AppError = require("../../../utils/appError");
 const userService = require("../users/service");
 const Identity = require("./model/identity");
 const JWTservice = require("./../.././../utils/JWTservice");
+const JWTHelpers = require("./../.././../utils/JWTservice");
 
 const authService = {
   register: async (req) => {
-    console.log(req);
     const newUser = await userService.create(req);
-    const { accessToken, refreshToken } = JWTservice.generateToken(newUser._id);
+    console.log(newUser);
+    const { accessToken, refreshToken } = JWTHelpers.generateToken(newUser._id);
 
     await Identity.create({
       userId: newUser._id,
