@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const JWTHelpers = {
   makeTokens: (id, lifeSpan) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: lifeSpan });

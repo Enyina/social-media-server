@@ -5,7 +5,8 @@ const JWTservice = require("./../.././../utils/JWTservice");
 
 const authService = {
   register: async (req) => {
-    const newUser = userService.create(req);
+    console.log(req);
+    const newUser = await userService.create(req);
     const { accessToken, refreshToken } = JWTservice.generateToken(newUser._id);
 
     await Identity.create({

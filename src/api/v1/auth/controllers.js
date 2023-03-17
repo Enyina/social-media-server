@@ -1,9 +1,11 @@
 const authService = require("./service");
 const { sendRes } = require("./.././.././../utils/sendRes");
 const catchAsync = require("../../../utils/catchAsync");
+const { log } = require("winston");
 
 const authController = {
   signup: catchAsync(async (req, res) => {
+    console.log(req);
     const { accessToken, refreshToken } = await authService.register(req);
 
     res.cookies("accessToken", access, {
@@ -16,6 +18,7 @@ const authController = {
     });
 
     sendRes(res, 201, { accessToken, refreshToken });
+    console.log(sendRes(res, 201, { accessToken, refreshToken }));
   }),
   login: catchAsync(async (req, res) => {
     const { accessToken, refreshToken } = await authService.login(req);
