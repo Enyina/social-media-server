@@ -22,11 +22,13 @@ const userService = {
   },
   getOne: async (req) => {
     const userId = req.body.userId;
+    const email = req.body.email;
     const username = req.body.username;
 
     const user = userId
       ? await User.findById(userId)
-      : await User.findOne({ username });
+      : await User.findOne({ username } || { email });
+
     return user;
   },
   update: async (req) => {

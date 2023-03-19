@@ -7,7 +7,7 @@ const JWTHelpers = require("./../.././../utils/JWTservice");
 const authService = {
   register: async (req) => {
     const newUser = await userService.create(req);
-    console.log(newUser);
+
     const { accessToken, refreshToken } = JWTHelpers.generateToken(newUser._id);
 
     await Identity.create({
@@ -15,12 +15,12 @@ const authService = {
       accessToken,
       refreshToken,
     });
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, newUser };
   },
   login: async (req) => {
     const { username, email, password } = req.body;
     try {
-      const user = await userService.getOne(username);
+      const user = await userService.getOne(username || email);
       await user.comparePassword(password);
       const { accessToken, refreshToken } = JWTservice.generateToken(user._id);
 
@@ -32,12 +32,11 @@ const authService = {
           runValidators: true,
         }
       );
+      return { accessToken, refreshToken, user };
     } catch (error) {
       console.log(error);
       throw new AppError("Invalid user credentials", 401);
     }
-
-    return { accessToken, refreshToken };
   },
   // refreshToken: async ({ userId, refreshToken }) => {
   //   const identification = await Identity.findOne({

@@ -8,12 +8,15 @@ const errorHandler = require("./middleware/errorHandler");
 const v1Router = require("./router");
 const { stream } = require("./config/winston");
 
+const cookieParser = require("cookie-parser");
+
 const app = express();
 // TODO: confirm this
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 //middleware
+app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("combined", { stream }));

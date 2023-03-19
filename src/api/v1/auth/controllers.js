@@ -6,8 +6,11 @@ const { log } = require("winston");
 const authController = {
   signup: catchAsync(async (req, res) => {
     console.log(req.body);
-    const { accessToken, refreshToken } = await authService.register(req);
-    console.log({ accessToken }, { refreshToken });
+    const { accessToken, refreshToken, newUser } = await authService.register(
+      req
+    );
+
+    res.user = newUser;
 
     res.cookie("accessToken", accessToken, {
       maxage: 600000, // 10 minutes
@@ -22,8 +25,8 @@ const authController = {
     console.log(sendRes(res, 201, { accessToken, refreshToken }));
   }),
   login: catchAsync(async (req, res) => {
-    const { accessToken, refreshToken } = await authService.login(req);
-
+    const { accessToken, refreshToken, user } = await authService.login(req);
+    res.user = user;
     res.cookie("accessToken", accessToken, {
       maxage: 600000, // 10 minutes
       httpOnly: true,
