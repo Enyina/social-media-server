@@ -3,7 +3,15 @@ const userService = require("./service");
 
 const userController = {
   getUser: catchAsync(async (req, res, next) => {
-    const user = userService.getOne(req);
+    const user = userService.getOneById(req.params.id);
+
+    res.status(200).json({
+      status: "success",
+      data: user,
+    });
+  }),
+  getProfile: catchAsync(async (req, res, next) => {
+    const user = userService.getOneByUsername(req.body.username);
 
     res.status(200).json({
       status: "success",

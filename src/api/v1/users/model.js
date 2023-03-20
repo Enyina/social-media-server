@@ -66,9 +66,6 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
-const User = model("User", userSchema);
-
-module.exports = User;
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -76,7 +73,8 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-userSchema.methods.comparePasswords = async function (password) {
+userSchema.methods.comparePassword = async function (password) {
+  console.log(password);
   const isPasswordCorrect = bcrypt.compareSync(password, this.password);
   if (!isPasswordCorrect) throw new AppError("Invalid user credential", 401);
   return isPasswordCorrect;
@@ -91,3 +89,5 @@ userSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
+const User = model("User", userSchema);
+module.exports = User;

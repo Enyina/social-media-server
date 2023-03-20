@@ -21,10 +21,10 @@ const authController = {
       httpOnly: true,
     });
 
-    sendRes(res, 201, { accessToken, refreshToken });
-    console.log(sendRes(res, 201, { accessToken, refreshToken }));
+    sendRes(res, 201, { accessToken, refreshToken, newUser });
   }),
   login: catchAsync(async (req, res) => {
+    console.log(req.body);
     const { accessToken, refreshToken, user } = await authService.login(req);
     res.user = user;
     res.cookie("accessToken", accessToken, {
@@ -36,7 +36,7 @@ const authController = {
       httpOnly: true,
     });
 
-    sendRes(res, 200, { accessToken, refreshToken });
+    sendRes(res, 200, { accessToken, refreshToken, user });
   }),
 };
 

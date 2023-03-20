@@ -20,14 +20,26 @@ const userService = {
       log.error(error);
     }
   },
-  getOne: async (req) => {
-    const userId = req.body.userId;
-    const email = req.body.email;
-    const username = req.body.username;
-
-    const user = userId
-      ? await User.findById(userId)
-      : await User.findOne({ username } || { email });
+  getOneById: async (userId) => {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new AppError("User not found", 400);
+    }
+    return user;
+  },
+  getOneByEmail: async (email, password) => {
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new AppError("User not found", 400);
+    }
+    const bn = await user.comparePassword(password);
+    return user;
+  },
+  getOneByUsername: async (username) => {
+    const user = await User.findOne({ username });
+    if (!user) {
+      throw new AppError("User not found", 400);
+    }
 
     return user;
   },

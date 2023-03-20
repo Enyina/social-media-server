@@ -8,7 +8,7 @@ userRouter
   .get(userController.getUser)
   .patch(userController.updateUser)
   .patch(userController.deleteUser);
-userRouter.route("/profile/:userId").get(userController.getUser);
+userRouter.route("/profile/:username").get(userController.getProfile);
 userRouter.use("/friends", friendRouter);
 
 module.exports = userRouter;

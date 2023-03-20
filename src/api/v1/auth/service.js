@@ -20,11 +20,12 @@ const authService = {
   login: async (req) => {
     const { username, email, password } = req.body;
     try {
-      const user = await userService.getOne(username || email);
-      await user.comparePassword(password);
+      const user = await userService.getOneByEmail(email, password);
+      console.log(user);
+      // await user.comparePasswords(password);
       const { accessToken, refreshToken } = JWTservice.generateToken(user._id);
 
-      await Identity.findByIdAndUpdate(
+      await Identity.findOneAndUpdate(
         { userId: user._id },
         { accessToken, refreshToken },
         {
