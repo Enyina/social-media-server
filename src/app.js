@@ -13,7 +13,7 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 // TODO: confirm this
-app.use("/images", express.static(path.join(__dirname, "public/images")));
+app.use("/images", express.static(path.join(__dirname, "../public/images")));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 //middleware
