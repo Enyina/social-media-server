@@ -43,9 +43,13 @@ const postController = {
     const result = await postService.like(req);
     sendRes(res, 200, result);
   }),
-  Timelime: catchAsync(async (req, res, next) => {
-    const timelime = await postService.getTimelime(req);
-    sendRes(res, 200, timelime);
+  Timeline: catchAsync(async (req, res, next) => {
+    const timelime = await postService.getTimeline(req);
+    // sendRes(res, 200, timelime);
+    res.status(200).json({
+      status: "success",
+      timelime,
+    });
   }),
 };
 

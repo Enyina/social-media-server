@@ -8,7 +8,7 @@ postRouter.route("/:postId/comments").post(postController.newComment);
 postRouter.route("/:postId/replies").post(postController.newReply);
 postRouter.route("/:postId/likes").post(postController.like);
 
-postRouter.route("/timeline/:userId").get(postController.Timelime);
+postRouter.route("/timeline/:userId").get(postController.Timeline);
 
 postRouter
   .route("/:postId")
