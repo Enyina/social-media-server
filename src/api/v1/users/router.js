@@ -8,6 +8,8 @@ userRouter
   .get(userController.getUser)
   .patch(userController.updateUser)
   .patch(userController.deleteUser);
+
+userRouter.route("/:userId").get(userController.getProfile);
 userRouter.route("/profile/:username").get(userController.getProfile);
 userRouter.use("/friends", friendRouter);
 
