@@ -20,7 +20,7 @@ const friendService = {
       throw new AppError("Can't follow yourself", 400);
     }
 
-    currentUser = await userService.getOne(senderId);
+    currentUser = await userService.getOneById(senderId);
     if (currentUser.friends.includes(receiverId)) {
       throw new AppError("You are already friends with this user", 400);
     }
