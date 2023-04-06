@@ -10,6 +10,7 @@ const { stream } = require("./config/winston");
 const cors = require("cors");
 
 const cookieParser = require("cookie-parser");
+const { cloudinary } = require("./utils/cloudinary");
 
 const app = express();
 // TODO: confirm this
@@ -18,30 +19,38 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 //middleware
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(helmet());
 app.use(morgan("combined", { stream }));
 app.use(cors());
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "../public/images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
 
 app.get("/health", (_request, response) => {
   response.json({ status: "up" });
 });
 
-const upload = multer({ storage: storage });
-app.post("/api/upload", upload.single("file"), (req, res) => {
+app.get("/api/images", async (req, res) => {
+  const { resources } = await cloudinary.search
+    .expression("folder: mosocial")
+    .sort_by("public_id", "desc")
+    // .max_results(30)
+    .execute();
+
+  const publicIds = resources.map((file) => file.public_id);
+  res.json({ publicIds });
+});
+
+app.post("/api/upload", async (req, res) => {
   try {
-    return res.status(200).json("File uploded successfully");
-  } catch (error) {
-    console.error(error);
+    const fileStr = req.body.data;
+    const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+      upload_preset: "mosocial",
+    });
+    console.log(uploadResponse);
+    res.json({ msg: "yaya" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ err: "Something went wrong" });
   }
 });
 
