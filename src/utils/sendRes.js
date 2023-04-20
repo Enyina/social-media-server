@@ -5,4 +5,4 @@ const sendRes = (res, status, data) => {
   });
 };
 
-module.exports = sendRes;
+module.exports = { sendRes };

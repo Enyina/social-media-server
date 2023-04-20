@@ -1,5 +1,5 @@
 const catchAsync = require("../../../utils/catchAsync");
-const sendRes = require("../../../utils/sendRes");
+const { sendRes } = require("../../../utils/sendRes");
 const postService = require("./services");
 
 const postController = {
