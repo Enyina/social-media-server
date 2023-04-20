@@ -22,7 +22,7 @@ const friendController = {
   }),
 
   rejectFriendRequest: catchAsync(async (req, res, next) => {
-    const rejectReq = await friendService.rejectRequest(req);
+    const rejectReq = await friendService.rejectRequet(req);
 
     sendRes(res, 200, rejectReq);
   }),

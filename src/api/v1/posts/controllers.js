@@ -45,6 +45,7 @@ const postController = {
   }),
   Timeline: catchAsync(async (req, res, next) => {
     const timelime = await postService.getTimeline(req);
+
     // sendRes(res, 200, timelime);
     res.status(200).json({
       status: "success",

@@ -2,7 +2,7 @@ const userController = require("./controller");
 const friendRouter = require("../friends");
 
 const userRouter = require("express").Router();
-
+userRouter.route("/").get(userController.getUser);
 userRouter
   .route("/:userId")
   .get(userController.getUser)

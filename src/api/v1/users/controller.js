@@ -2,9 +2,12 @@ const catchAsync = require("../../../utils/catchAsync");
 const userService = require("./service");
 
 const userController = {
-  getUser: catchAsync(async (req, res, next) => {
-    const user = userService.getOneById(req.params.id);
-
+  getUser: catchAsync(async (req, res) => {
+    const { userId, username } = req.query;
+    const user = userId
+      ? await userService.getOneById(userId)
+      : await userService.getOneByUsername(username);
+    console.log(user);
     res.status(200).json({
       status: "success",
       data: user,

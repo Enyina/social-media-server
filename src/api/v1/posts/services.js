@@ -117,7 +117,11 @@ const postService = {
   },
   like: async (req) => {
     try {
-      const post = await Post.findById(req.params.id);
+      console.log(req.body);
+      console.log(req.params);
+      const post = await Post.findById(req.params.postId);
+      console.log(post);
+      console.log(post.likes.includes(req.body.userId));
       if (!post.likes.includes(req.body.userId)) {
         await post.updateOne({ $push: { likes: req.body.userId } });
       } else {
@@ -130,16 +134,25 @@ const postService = {
     }
   },
   getTimeline: async (req) => {
-    const { username: userId } = req.body;
+    const { userId } = req.query;
     try {
-      const user = await User.findOne({ username: userId }).populate("friends");
-      const userPosts = await Post.find({ userId: user.id });
-      const friendPosts = await Promise.all(
-        user.friends.map((friend) => postService.getAllUserPost(friend._id))
-      );
-      const timeline = userPosts.concat(...friendPosts);
+      const user = await userService.getOneById(userId);
 
-      return timeline;
+      const userPosts = await Post.find({ userId });
+
+      if (user.friends.length > 1) {
+        const friendPosts = await Promise.all(
+          user.friends.map((friend) => {
+            console.log(friend);
+            postService.getAllUserPost(friend._id);
+          })
+        );
+        const timeline = userPosts.concat(...friendPosts);
+        console.log(timeline);
+        return timeline;
+      }
+
+      return userPosts;
     } catch (error) {
       console.log(error);
       throw new AppError("invalid user", 400);

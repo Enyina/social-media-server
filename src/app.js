@@ -8,6 +8,7 @@ const errorHandler = require("./middleware/errorHandler");
 const v1Router = require("./router");
 const { stream } = require("./config/winston");
 const cors = require("cors");
+const fileupload = require("express-fileupload");
 
 const cookieParser = require("cookie-parser");
 const { cloudinary } = require("./utils/cloudinary");
@@ -24,30 +25,30 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(helmet());
 app.use(morgan("combined", { stream }));
 app.use(cors());
+app.use(fileupload({ useTempFiles: true }));
 
 app.get("/health", (_request, response) => {
   response.json({ status: "up" });
 });
 
-app.get("/api/images", async (req, res) => {
-  const { resources } = await cloudinary.search
-    .expression("folder: mosocial")
-    .sort_by("public_id", "desc")
-    // .max_results(30)
-    .execute();
+// app.get("/api/images", async (req, res) => {
+//   const { resources } = await cloudinary.search
+//     .expression("folder: mosocial")
+//     .sort_by("public_id", "desc")
+//     // .max_results(30)
+//     .execute();
 
-  const publicIds = resources.map((file) => file.public_id);
-  res.json({ publicIds });
-});
+//   const publicIds = resources.map((file) => file.public_id);
+//   res.json({ publicIds });
+// });
 
 app.post("/api/upload", async (req, res) => {
   try {
-    const fileStr = req.body.data;
+    const fileStr = req.body.fileName;
     const uploadResponse = await cloudinary.uploader.upload(fileStr, {
       upload_preset: "mosocial",
     });
-    console.log(uploadResponse);
-    res.json({ msg: "yaya" });
+    res.status(201).json({ status: "success", uploadResponse });
   } catch (err) {
     console.error(err);
     res.status(500).json({ err: "Something went wrong" });
